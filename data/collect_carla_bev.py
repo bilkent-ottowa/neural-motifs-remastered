@@ -16,7 +16,7 @@ import numpy as np
 import json
 import os
 import cv2
-
+import pickle
 
 TAGS = {1: "street", # roads
         2: "sidewalk", # sidewalks
@@ -193,8 +193,7 @@ class CarlaBEVSampler:
         Save the data to a .json file.
         """
         with open(os.path.join(self.save_dir, self.save_name), 'w') as f:
-            json.dump(self.bev_data, f)
-
+            pickle.dump(self.bev_data, f)
 
 
 
