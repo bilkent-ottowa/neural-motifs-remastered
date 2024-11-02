@@ -17,12 +17,20 @@ import json
 import os
 import cv2
 
-## TODO: MAP TO VG CLASSES ##
-TAGS = {14: "car",
+
+TAGS = {1: "street",
+        2: "sidewalk",
+        3: "building",
+        6: "pole", 
+        12: "person",
+        14: "car",
         15: "truck",
         16: "bus",
         18: "motorcycle",
-        12: "pedestrian"} 
+        19: "bike",
+        24: "sign"} # The tags are from the CARLA ObjectLabels.h
+
+
 
 class CarlaBEVSampler:
     def __init__(self, client: carla.Client, tmPort = 8000, mode = 'sync', numBurn = 0, save_dir = 'data/carla_bev', save_name = 'carla_bev.json'):
@@ -80,6 +88,8 @@ class CarlaBEVSampler:
                 self.RGB_que.get()
                 self.SEG_que.get()
 
+        self.vgg_metadata = loadVG_SGG(os.path.join(__file__, 'stanford_filtered/VG-SGG-dicts.json'))
+        self.vgg_labels = self.vgg_metadata['label_to_idx']
 
     def set_mode(self, mode):
         """
@@ -147,7 +157,8 @@ class CarlaBEVSampler:
                 y_min, x_min = np.min(objLoc, axis=1)
                 y_max, x_max = np.max(objLoc, axis=1)
                 gt_bb = [x_min, y_min, x_max, y_max]
-                gt_class = [img_id, tag] # TODO: Change this to the class id in VG dataset.
+                vgg_tag = self.vgg_labels[name]
+                gt_class = [img_id, vgg_tag] 
 
                 gt_bbs.append(gt_bb)
                 gt_classes.append(gt_class)
@@ -255,3 +266,18 @@ class ActorCar:
         self.car.set_autopilot(True)
     def destroy(self):
         self.car.destroy()
+
+### Helper functions ###
+def loadVG_SGG(path):
+    """
+    Load the VG-SGG metadata.
+    Args:
+        path: str, the path to the VG-SGG metadata.
+    Returns:
+        metadata: dict, the metadata of the VG-SGG dataset.
+    """
+
+    with open(path, 'r') as f:
+        metadata = json.load(f)
+    
+    return metadata
