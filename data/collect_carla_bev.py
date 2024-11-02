@@ -18,17 +18,18 @@ import os
 import cv2
 
 
-TAGS = {1: "street",
-        2: "sidewalk",
-        3: "building",
-        6: "pole", 
-        12: "person",
-        14: "car",
-        15: "truck",
-        16: "bus",
-        18: "motorcycle",
-        19: "bike",
-        24: "sign"} # The tags are from the CARLA ObjectLabels.h
+TAGS = {1: "street", # roads
+        2: "sidewalk", # sidewalks
+        3: "building", # buildings
+        6: "pole",  # poles
+        12: "person", # pedestrians
+        14: "car",  # cars 
+        15: "truck", # trucks
+        16: "bus", # buses
+        18: "motorcycle", # motorcycles
+        19: "bike", # bicycles
+        24: "sign"} # RoadLines (not sure)
+                    # The tags are from the CARLA ObjectLabels.h
 
 
 
