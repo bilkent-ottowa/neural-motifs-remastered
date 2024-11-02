@@ -136,7 +136,7 @@ class CarlaBEV(Dataset):
         }
 
         assertion_checks(entry)
-        
+
         return entry
     
     def __len__(self):
