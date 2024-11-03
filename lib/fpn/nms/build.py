@@ -1,6 +1,6 @@
 import os
 import torch
-from torch.utils.ffi import create_extension
+from torch.utils.cpp_extension import BuildExtension as create_extension
 # Might have to export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
 
 sources = []
