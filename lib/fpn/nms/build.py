@@ -24,10 +24,10 @@ extra_objects = ['src/cuda/nms.cu.o']
 extra_objects = [os.path.join(this_file, fname) for fname in extra_objects]
 
 setup(
-    name='my_extension',
+    name='_ext.nms',
     ext_modules=[
         CUDAExtension(
-            name='my_extension',
+            name='_ext.nms',
             sources=sources,
             extra_objects=extra_objects,
             define_macros=defines,
