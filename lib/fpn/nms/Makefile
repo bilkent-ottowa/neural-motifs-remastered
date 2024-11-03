@@ -1,5 +1,5 @@
 all: src/cuda/nms.cu.o
-	python build.py
+	python build.py build_ext --inplace
 
 src/cuda/nms.cu.o: src/cuda/nms_kernel.cu
 	$(MAKE) -C src/cuda
