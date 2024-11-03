@@ -89,7 +89,8 @@ class CarlaBEVSampler:
                 self.RGB_que.get()
                 self.SEG_que.get()
 
-        self.vgg_metadata = loadVG_SGG(os.path.join(__file__, 'stanford_filtered/VG-SGG-dicts.json'))
+        filedir = os.path.dirname(__file__)
+        self.vgg_metadata = loadVG_SGG(os.path.join(filedir, 'stanford_filtered/VG-SGG-dicts.json'))
         self.vgg_labels = self.vgg_metadata['label_to_idx']
 
     def set_mode(self, mode):
@@ -137,7 +138,7 @@ class CarlaBEVSampler:
         seg_array = seg_array[:, :, ::-1]
         
         # Start fusing
-        detectedTags = seg_im[:, :, 0] # Tags are stored in the red channel.
+        detectedTags = seg_array[:, :, 0] # Tags are stored in the red channel.
         gt_bbs = []
         gt_classes = []
 
@@ -146,7 +147,7 @@ class CarlaBEVSampler:
 
             if len(objectPx[0]) == 0:
                 continue
-            objIds = np.unique(seg_im[objectPx][:, 1:], axis=0)  # Get the object ids.
+            objIds = np.unique(seg_array[objectPx][:, 1:], axis=0)  # Get the object ids.
 
             x_min = 0
             y_min = 0
@@ -154,7 +155,7 @@ class CarlaBEVSampler:
             y_max = 0
 
             for objId in objIds:
-                objLoc = np.where(np.all(seg_im[:,:,1:] == objId, axis=-1))  # Get the location of the object.
+                objLoc = np.where(np.all(seg_array[:,:,1:] == objId, axis=-1))  # Get the location of the object.
                 y_min, x_min = np.min(objLoc, axis=1)
                 y_max, x_max = np.max(objLoc, axis=1)
                 gt_bb = [x_min, y_min, x_max, y_max]
@@ -192,7 +193,7 @@ class CarlaBEVSampler:
         """
         Save the data to a .json file.
         """
-        with open(os.path.join(self.save_dir, self.save_name), 'w') as f:
+        with open(os.path.join(self.save_dir, self.save_name), 'wb') as f:
             pickle.dump(self.bev_data, f)
 
 
