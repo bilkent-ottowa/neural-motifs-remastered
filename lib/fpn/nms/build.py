@@ -23,6 +23,10 @@ print(this_file)
 extra_objects = ['src/cuda/nms.cu.o']
 extra_objects = [os.path.join(this_file, fname) for fname in extra_objects]
 
+# Ensure the _ext directory exists
+ext_dir = os.path.join(this_file, '_ext')
+os.makedirs(ext_dir, exist_ok=True)
+
 setup(
     name='_ext.nms',
     ext_modules=[
