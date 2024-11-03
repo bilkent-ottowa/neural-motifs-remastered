@@ -1,10 +1,11 @@
 
+from lib.pytorch_misc import optimistic_restore
 from dataloaders.visual_genome import VGDataLoader, VG
 import numpy as np
 import torch
 
 from config import ModelConfig
-from lib.pytorch_misc import optimistic_restore
+
 from lib.evaluation.sg_eval import BasicSceneGraphEvaluator
 from tqdm import tqdm
 from config import BOX_SCALE, IM_SCALE

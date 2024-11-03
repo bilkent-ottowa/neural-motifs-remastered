@@ -2,6 +2,7 @@
 
 # This is a script that will evaluate all the models for SGDET
 export CUDA_VISIBLE_DEVICES=$1
+export PYTHONPATH=/home/yigityildirim/OpenAI/OpenAI\ non-IB/neural-motifs
 
 if [ $1 == "0" ]; then
     echo "EVALING THE BASELINE"
@@ -10,7 +11,8 @@ if [ $1 == "0" ]; then
     -nepoch 50 -use_bias -cache baseline_sgdet.pkl -test
 elif [ $1 == "1" ]; then
     echo "EVALING MESSAGE PASSING"
-
+    
+    cd /home/yigityildirim/OpenAI/OpenAI\ non-IB/neural-motifs
     python models/eval_rels.py -m sgdet -model stanford -b 6 -p 100 -lr 1e-3 -ngpu 1 -clip 5 \
     -ckpt checkpoints/stanford-sgdet/vgrel-18.tar -cache stanford_sgdet.pkl -test
 elif [ $1 == "2" ]; then
