@@ -6,7 +6,7 @@ from config import ModelConfig
 from lib.pytorch_misc import optimistic_restore
 from lib.evaluation.sg_eval import BasicSceneGraphEvaluator
 from tqdm import tqdm
-from config import BOX_SCALE, IM_SCALE
+from config import BOX_SCALE, IM_SCALE, CARLA_IMAGES, CARLA_DATA_PATH, VG_SGG_DICT_FN
 import dill as pkl
 import os
 from torch.utils.data import DataLoader
@@ -20,9 +20,9 @@ else:
     raise ValueError()
 
 carlaData = CarlaBEV(mode = 'test',
-                     carla_file = 'data/carla/carla_bev.json', # Fix paths
-                     metadata_file = 'data/carla/carla_bev_metadata.json',
-                     im_folder = 'data/carla/images',
+                     carla_file = CARLA_DATA_PATH, # Fix paths
+                     metadata_file = VG_SGG_DICT_FN,
+                     im_folder = CARLA_IMAGES,
                      filter_empty_rels = True,
                      filter_duplicate_rels = True,
                      num_im = -1,
