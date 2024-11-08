@@ -289,15 +289,15 @@ class ObjectDetector(nn.Module):
                                   be used to compute the training loss. Each (img_ind, fpn_idx)
         :return: If train:
         """
-        fmap = self.feature_map(x)
+        fmap = self.feature_map(x) #will not call nms here if mode == 'gtbox'
 
         # Get boxes from RPN
         rois, obj_labels, bbox_targets, rpn_scores, rpn_box_deltas, rel_labels = \
             self.get_boxes(fmap, im_sizes, image_offset, gt_boxes,
-                           gt_classes, gt_rels, train_anchor_inds, proposals=proposals)
+                           gt_classes, gt_rels, train_anchor_inds, proposals=proposals) #will not call nms here if mode == 'gtbox'
 
         # Now classify them
-        obj_fmap = self.obj_feature_map(fmap, rois)
+        obj_fmap = self.obj_feature_map(fmap, rois) #will call roi_align here ### NEED TO FIX ROI_ALIGN, ALL OTHER CAN BE REMOVED
         od_obj_dists = self.score_fc(obj_fmap)
         od_box_deltas = self.bbox_fc(obj_fmap).view(
             -1, len(self.classes), 4) if self.mode != 'gtbox' else None
