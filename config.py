@@ -26,6 +26,9 @@ VG_SGG_DICT_FN = stanford_path('VG-SGG-dicts.json')
 PROPOSAL_FN = stanford_path('proposals.h5')
 
 COCO_PATH = '/home/rowan/datasets/mscoco'
+
+CARLA_IMAGES = '/home/yigityildirim/OpenAI/OpenAI non-IB/neural-motifs/data/carla_bev/images'
+CARLA_DATA_PATH = '/home/yigityildirim/OpenAI/OpenAI non-IB/neural-motifs/data/carla_bev/carla_bev.pkl'
 # =============================================================================
 # =============================================================================
 

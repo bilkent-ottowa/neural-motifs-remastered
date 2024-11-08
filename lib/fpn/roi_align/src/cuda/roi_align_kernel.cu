@@ -24,7 +24,7 @@ extern "C" {
         idx /= crop_height;
         const int d = idx % depth;
         const int b = idx / depth;
-
+        
         const int b_in = int(boxes_ptr[b*5]);
         const float x1 = boxes_ptr[b * 5 + 1];
         const float y1 = boxes_ptr[b * 5 + 2];
@@ -39,7 +39,7 @@ extern "C" {
                               : 0;
         const float width_scale =
             (crop_width > 1) ? (x2 - x1) * (image_width - 1) / (crop_width - 1) : 0;
-
+        
         const float in_y = (crop_height > 1)
                                ? y1 * (image_height - 1) + y * height_scale
                                : 0.5 * (y1 + y2) * (image_height - 1);

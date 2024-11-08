@@ -1,7 +1,7 @@
 from setuptools import setup, Distribution
 import os
 import torch
-from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension
+from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension, include_paths
 
 # Might have to export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
 
@@ -35,7 +35,7 @@ setup(
             sources=sources,
             extra_objects=extra_objects,
             define_macros=defines,
-            include_dirs=[os.path.join(this_file, 'src')],
+            include_dirs=[os.path.join(this_file, 'src'), include_paths()],
             extra_compile_args={
                 'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=0'],
                 'nvcc': ['-std=c++14']
