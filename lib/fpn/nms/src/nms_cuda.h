@@ -1,1 +1,1 @@
-int nms_apply(THIntTensor* keep, THCudaTensor* boxes_sorted, const float nms_thresh);
+int nms_apply(at::Tensor keep, at::Tensor boxes_sorted, const float nms_thresh);

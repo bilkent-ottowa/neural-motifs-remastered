@@ -11,7 +11,7 @@ from torch.nn import functional as F
 from torch.nn.utils.rnn import PackedSequence
 from lib.resnet import resnet_l4
 from config import BATCHNORM_MOMENTUM
-from lib.fpn.nms.functions.nms import apply_nms
+# from lib.fpn.nms.functions.nms import apply_nms
 
 # from lib.decoder_rnn import DecoderRNN, lstm_factory, LockedDropout
 from lib.lstm.decoder_rnn import DecoderRNN
@@ -273,9 +273,10 @@ class LinearizedContext(nn.Module):
                     scores_ci = probs.data[:, c_i]
                     boxes_ci = boxes_per_cls.data[:, c_i]
 
-                    keep = apply_nms(scores_ci, boxes_ci,
-                                     pre_nms_topn=scores_ci.size(0), post_nms_topn=scores_ci.size(0),
-                                     nms_thresh=0.3)
+                    # keep = apply_nms(scores_ci, boxes_ci,
+                    #                  pre_nms_topn=scores_ci.size(0), post_nms_topn=scores_ci.size(0),
+                    #                  nms_thresh=0.3)
+                    keep = None
                     nms_mask[:, c_i][keep] = 1
 
                 obj_preds = Variable(nms_mask * probs.data, volatile=True)[:,1:].max(1)[1] + 1
