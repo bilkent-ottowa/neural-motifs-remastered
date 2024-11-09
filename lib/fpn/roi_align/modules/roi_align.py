@@ -13,7 +13,7 @@ class RoIAlign(Module):
 
     def forward(self, features, rois):
         return RoIAlignFunction(self.aligned_height, self.aligned_width,
-                                self.spatial_scale)(features, rois)
+                                self.spatial_scale)(features, rois, self.spatial_scale, self.aligned_height, self.aligned_width)
 
 class RoIAlignAvg(Module):
     def __init__(self, aligned_height, aligned_width, spatial_scale):
@@ -25,7 +25,7 @@ class RoIAlignAvg(Module):
 
     def forward(self, features, rois):
         x =  RoIAlignFunction(self.aligned_height+1, self.aligned_width+1,
-                                self.spatial_scale)(features, rois)
+                                self.spatial_scale)(features, rois, self.spatial_scale, self.aligned_height, self.aligned_width)
         return avg_pool2d(x, kernel_size=2, stride=1)
 
 class RoIAlignMax(Module):
@@ -38,5 +38,5 @@ class RoIAlignMax(Module):
 
     def forward(self, features, rois):
         x =  RoIAlignFunction(self.aligned_height+1, self.aligned_width+1,
-                                self.spatial_scale)(features, rois)
+                                self.spatial_scale)(features, rois, self.spatial_scale, self.aligned_height, self.aligned_width)
         return max_pool2d(x, kernel_size=2, stride=1)

@@ -5,6 +5,7 @@
 #include <c10/util/SmallVector.h>
 #include <math.h>
 #include "cuda/roi_align_kernel.h"
+#include <torch/extension.h>
 
 int roi_align_forward_cuda(int crop_height, int crop_width, float spatial_scale,
                            at::Tensor features, at::Tensor rois, at::Tensor output)
@@ -74,4 +75,10 @@ int roi_align_backward_cuda(int crop_height, int crop_width, float spatial_scale
         grads_ptr, boxes_ptr, num_boxes, batch, image_height, image_width,
         crop_height, crop_width, depth, grads_image_ptr, stream);
     return 1;
+}
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
+{
+    m.def("roi_align_forward_cuda", &roi_align_forward_cuda, "ROIAlign forward (CUDA)");
+    m.def("roi_align_backward_cuda", &roi_align_backward_cuda, "ROIAlign backward (CUDA)");
 }
