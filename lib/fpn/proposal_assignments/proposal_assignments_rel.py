@@ -84,12 +84,12 @@ def proposal_assignments_rel(rpn_rois, gt_boxes, gt_classes, gt_rels, image_offs
 
         num_box_seen += obj_inds_i.size
 
-    rois = torch.FloatTensor(np.concatenate(rois, 0)).cuda(rpn_rois.get_device(), async=True)
-    labels = torch.LongTensor(np.concatenate(obj_labels, 0)).cuda(rpn_rois.get_device(), async=True)
+    rois = torch.FloatTensor(np.concatenate(rois, 0)).cuda(rpn_rois.get_device(), non_blocking=True)
+    labels = torch.LongTensor(np.concatenate(obj_labels, 0)).cuda(rpn_rois.get_device(), non_blocking=True)
     bbox_targets = torch.FloatTensor(np.concatenate(bbox_targets, 0)).cuda(rpn_rois.get_device(),
-                                                                           async=True)
+                                                                           non_blocking=True)
     rel_labels = torch.LongTensor(np.concatenate(rel_labels, 0)).cuda(rpn_rois.get_device(),
-                                                                      async=True)
+                                                                      non_blocking=True)
 
     return rois, labels, bbox_targets, rel_labels
 
