@@ -2,7 +2,7 @@
 #include "curand.h"
 #include "cublas_v2.h"
 #include <iostream>
-#include <torch/extension.h>
+
 
 #ifdef __cplusplus
 extern "C" {
