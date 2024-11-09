@@ -2,6 +2,7 @@
 #include "curand.h"
 #include "cublas_v2.h"
 #include <iostream>
+#include <torch/extension.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,6 +11,7 @@ extern "C" {
 #include <float.h>
 #include <stdio.h>
 #include "highway_lstm_kernel.h"
+
 
 #define BLOCK 256
 
@@ -494,6 +496,8 @@ void highway_lstm_forward_ongpu(int inputSize, int hiddenSize, int miniBatch,
 
    cudaErrCheck(cudaDeviceSynchronize());
 }
+
+
 
 #ifdef __cplusplus
 }

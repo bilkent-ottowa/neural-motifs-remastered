@@ -67,8 +67,8 @@ class _AlternatingHighwayLSTMFunction(Function):
         self.num_layers = num_layers
         self.train = train
 
-    @overrides
-    def forward(self,  # pylint: disable=arguments-differ
+    @staticmethod
+    def forward(ctx,  # pylint: disable=arguments-differ
                 inputs: torch.Tensor,
                 weight: torch.Tensor,
                 bias: torch.Tensor,
@@ -76,15 +76,19 @@ class _AlternatingHighwayLSTMFunction(Function):
                 memory_accumulator: torch.Tensor,
                 dropout_mask: torch.Tensor,
                 lengths: torch.Tensor,
-                gates: torch.Tensor) -> Tuple[torch.Tensor, None]:
+                gates: torch.Tensor,
+                hidden_size: int,
+                isTrain : bool,
+                numLayers: int) -> Tuple[torch.Tensor, None]:
+        
         sequence_length, batch_size, input_size = inputs.size()
-        tmp_i = inputs.new(batch_size, 6 * self.hidden_size)
-        tmp_h = inputs.new(batch_size, 5 * self.hidden_size)
-        is_training = 1 if self.train else 0
+        tmp_i = inputs.new(batch_size, 6 * hidden_size)
+        tmp_h = inputs.new(batch_size, 5 * hidden_size)
+        
         highway_lstm_layer.highway_lstm_forward_cuda(input_size,  # type: ignore # pylint: disable=no-member
-                                                     self.hidden_size,
+                                                     hidden_size,
                                                      batch_size,
-                                                     self.num_layers,
+                                                     numLayers,
                                                      sequence_length,
                                                      inputs,
                                                      lengths,
@@ -96,10 +100,13 @@ class _AlternatingHighwayLSTMFunction(Function):
                                                      bias,
                                                      dropout_mask,
                                                      gates,
-                                                     is_training)
+                                                     isTrain)
 
-        self.save_for_backward(inputs, lengths, weight, bias, state_accumulator,
-                               memory_accumulator, dropout_mask, gates)
+        # Save context for backward pass
+        ctx.save_for_backward(inputs, weight, bias, state_accumulator, memory_accumulator, dropout_mask, lengths, gates)
+        ctx.hidden_size = hidden_size
+        ctx.num_layers = numLayers
+        ctx.is_training = isTrain
 
         # The state_accumulator has shape: (num_layers, sequence_length + 1, batch_size, hidden_size)
         # so for the output, we want the last layer and all but the first timestep, which was the
@@ -107,15 +114,15 @@ class _AlternatingHighwayLSTMFunction(Function):
         output = state_accumulator[-1, 1:, :, :]
         return output, state_accumulator[:, 1:, :, :]
 
-    @overrides
-    def backward(self, grad_output, grad_hy):  # pylint: disable=arguments-differ
+    @staticmethod
+    def backward(ctx, grad_output, grad_hy):  # pylint: disable=arguments-differ
 
-        (inputs, lengths, weight, bias, state_accumulator,  # pylint: disable=unpacking-non-sequence
-         memory_accumulator, dropout_mask, gates) = self.saved_tensors
+        (inputs, weight, bias, state_accumulator, memory_accumulator, 
+         dropout_mask, lengths, gates) = ctx.saved_tensors
 
         inputs = inputs.contiguous()
         sequence_length, batch_size, input_size = inputs.size()
-        parameters_need_grad = 1 if self.needs_input_grad[1] else 0  # pylint: disable=unsubscriptable-object
+        parameters_need_grad = 1 if ctx.needs_input_grad[1] else 0  # pylint: disable=unsubscriptable-object
 
         grad_input = inputs.new().resize_as_(inputs).zero_()
         grad_state_accumulator = inputs.new().resize_as_(state_accumulator).zero_()
@@ -129,15 +136,17 @@ class _AlternatingHighwayLSTMFunction(Function):
         if parameters_need_grad:
             grad_weight.resize_as_(weight).zero_()
             grad_bias.resize_as_(bias).zero_()
+        hidden_size = ctx.hidden_size
+        tmp_i_gates_grad = inputs.new().resize_(batch_size, 6 * hidden_size).zero_()
+        tmp_h_gates_grad = inputs.new().resize_(batch_size, 5 * hidden_size).zero_()
 
-        tmp_i_gates_grad = inputs.new().resize_(batch_size, 6 * self.hidden_size).zero_()
-        tmp_h_gates_grad = inputs.new().resize_(batch_size, 5 * self.hidden_size).zero_()
-
-        is_training = 1 if self.train else 0
+        is_training = ctx.is_training
+        num_layers = ctx.num_layers
+        
         highway_lstm_layer.highway_lstm_backward_cuda(input_size,  # pylint: disable=no-member
-                                                      self.hidden_size,
+                                                      hidden_size,
                                                       batch_size,
-                                                      self.num_layers,
+                                                      num_layers,
                                                       sequence_length,
                                                       grad_output,
                                                       lengths,

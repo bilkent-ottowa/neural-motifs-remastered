@@ -4,7 +4,7 @@
 #include <c10/cuda/CUDAStream.h>
 #include <c10/util/SmallVector.h>
 #include "highway_lstm_kernel.h"
-
+#include <torch/extension.h>
 
 
 int highway_lstm_forward_cuda(int inputSize, int hiddenSize, int miniBatch,
@@ -101,4 +101,9 @@ int highway_lstm_backward_cuda(int inputSize, int hiddenSize, int miniBatch,
     return 1;
 
 
+}
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+    m.def("highway_lstm_forward_cuda", &highway_lstm_forward_cuda, "Highway LSTM forward (CUDA)");
+    m.def("highway_lstm_backward_cuda", &highway_lstm_backward_cuda, "Highway LSTM backward (CUDA)");
 }

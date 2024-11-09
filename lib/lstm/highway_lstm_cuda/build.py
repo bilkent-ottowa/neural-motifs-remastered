@@ -2,7 +2,7 @@
 from setuptools import setup, Distribution
 import os
 import torch
-from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension
+from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension, include_paths
 
 
 if not torch.cuda.is_available():
@@ -21,6 +21,7 @@ extra_objects = [os.path.join(this_file, fname) for fname in extra_objects]
 # Ensure the _ext directory exists
 ext_dir = os.path.join(this_file, '_ext')
 os.makedirs(ext_dir, exist_ok=True)
+print(ext_dir)
 
 setup(
     name='_ext.highway_lstm_layer',
@@ -30,7 +31,9 @@ setup(
             sources=sources,
             extra_objects=extra_objects,
             define_macros=defines,
-            include_dirs=[os.path.join(this_file, 'src')],
+            include_dirs=[os.path.join(this_file, 'src'), include_paths(),
+                          '/home/yigityildirim/OpenAI/OpenAI non-IB/.venv/lib/python3.8/site-packages/torch/include',
+                          '/home/yigityildirim/OpenAI/OpenAI non-IB/.venv/lib/python3.8/site-packages/torch/include/torch'],
             extra_compile_args={
                 'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=0'],
                 'nvcc': ['-std=c++14']
