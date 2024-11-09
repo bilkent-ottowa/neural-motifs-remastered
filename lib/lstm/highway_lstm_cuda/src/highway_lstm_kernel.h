@@ -1,4 +1,3 @@
-#include <cublasXt.h>
 
 #ifdef __cplusplus
 extern "C" {
