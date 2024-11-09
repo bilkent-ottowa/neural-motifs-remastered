@@ -8,7 +8,7 @@ from torch.nn import functional as F
 from config import ANCHOR_SIZE, ANCHOR_RATIOS, ANCHOR_SCALES
 from lib.fpn.generate_anchors import generate_anchors
 from lib.fpn.box_utils import bbox_preds, center_size, bbox_overlaps
-from lib.fpn.nms.functions.nms import apply_nms
+# from lib.fpn.nms.functions.nms import apply_nms
 from lib.fpn.proposal_assignments.proposal_assignments_gtbox import proposal_assignments_gtbox
 from lib.fpn.proposal_assignments.proposal_assignments_det import proposal_assignments_det
 
@@ -434,7 +434,7 @@ def filter_det(scores, boxes, start_ind=0, max_per_img=100, thresh=0.001, pre_nm
            same box (with different labels)
     :return: A numpy concatenated array with up to 100 detections/img [num_im, x1, y1, x2, y2, score, cls]
     """
-
+    raise NotImplementedError("NMS code is removed for now")
     valid_cls = (scores[:, 1:].data.max(0)[0] > thresh).nonzero() + 1
     if valid_cls.dim() == 0:
         return None
@@ -598,6 +598,7 @@ class RPNHead(nn.Module):
 
 
 def filter_roi_proposals(box_preds, class_preds, boxes_per_im, nms_thresh=0.7, pre_nms_topn=12000, post_nms_topn=2000):
+    raise NotImplementedError("NMS code is removed for now")
     inds, im_per = apply_nms(
         class_preds,
         box_preds,
