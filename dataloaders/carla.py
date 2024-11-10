@@ -93,7 +93,7 @@ class CarlaBEV(Dataset):
         return data
 
     def __getitem__(self, index):
-        imFile = os.path.join(self.im_folder, f'{index}.png')
+        imFile = os.path.join(self.im_folder, f'{index}.0.png')
         image_unpadded = Image.open(imFile).convert('RGB')
 
         gt_boxes = self.gt_boxes[index].copy()
