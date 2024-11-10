@@ -96,8 +96,8 @@ class CarlaBEV(Dataset):
         imFile = os.path.join(self.im_folder, f'{index}.png')
         image_unpadded = Image.open(imFile).convert('RGB')
 
-        gt_boxes = [self.carla[i]['boxes'] for i in range(len(self.carla)) if self.carla[i]['id'] == index]
-        gt_classes = [self.carla[i]['gt_classes'] for i in range(len(self.carla)) if self.carla[i]['id'] == index]
+        gt_boxes = self.gt_boxes[index].copy()
+        gt_classes = self.gt_classes[index].copy()
 
         # Boxes are already at BOX_SCALE
         if self.is_train:
@@ -131,7 +131,7 @@ class CarlaBEV(Dataset):
             'img': self.transform_pipeline(image_unpadded),
             'img_size': im_size,
             'gt_boxes': gt_boxes,
-            'gt_classes': self.gt_classes[index].copy(),
+            'gt_classes': gt_classes,
             'gt_relations': None,
             'scale': IM_SCALE / BOX_SCALE,  # Multiply the boxes by this.
             'index': index,
