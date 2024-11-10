@@ -5,4 +5,4 @@
 export PYTHONPATH=/home/yigityildirim/OpenAI/OpenAI\ non-IB/neural-motifs
 
 python models/start_carla_collect.py --asynch False --numBurn 0 --save-dir ./data/carla_bev --save-name carla_bev.pkl \
-    --numTicks 10 -cache motifnet_predcls_carla
+    --numTicks 10 
