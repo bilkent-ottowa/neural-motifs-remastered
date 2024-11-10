@@ -69,7 +69,7 @@ class CarlaBEV(Dataset):
         self.transform_pipeline = Compose(tform)
 
         self.filenames = [f for f in os.listdir(im_folder) if f.endswith('.png')]
-        self.gt_boxes = [self.carla[i]['boxes'] for i in range(len(self.carla))]
+        self.gt_boxes = [self.carla[i]['gt_bbs'] for i in range(len(self.carla))]
         self.gt_classes = [self.carla[i]['gt_classes'] for i in range(len(self.carla))]
 
     def load_metadata(self, path):
