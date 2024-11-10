@@ -49,6 +49,7 @@ class CarlaBEV(Dataset):
         assert mode in ['train', 'val', 'test'], "Mode must be in 'train', 'val', 'test'"
 
         self.mode = mode
+        self.is_train = self.mode == 'train'
 
         # Initialize the dataset
         self.carla_file = carla_file
