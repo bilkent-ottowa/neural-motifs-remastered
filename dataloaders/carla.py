@@ -68,6 +68,8 @@ class CarlaBEV(Dataset):
         ]
         self.transform_pipeline = Compose(tform)
 
+        self.filenames = [f for f in os.listdir(im_folder) if f.endswith('.png')]
+
     def load_metadata(self, path):
         with open(path, 'r') as f:
             metadata = json.load(f)
