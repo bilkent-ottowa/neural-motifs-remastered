@@ -19,6 +19,7 @@ elif conf.model == 'stanford':
 else:
     raise ValueError()
 
+
 carlaData = CarlaBEV(mode = 'test',
                      carla_file = CARLA_DATA_PATH, # Fix paths
                      metadata_file = VG_SGG_DICT_FN,
@@ -32,7 +33,7 @@ carlaData = CarlaBEV(mode = 'test',
 
 carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = True, num_workers = conf.num_workers)
 
-detector = RelModel(classes=carlaData.ind_to_classes, rel_classes=carlaData.ind_to_predicates,
+detector = RelModel(classes=carlaData.ind_to_classes, rel_classes=carlaData.ind_to_predicates, data=carlaData,
                     num_gpus=conf.num_gpus, mode=conf.mode, require_overlap_det=True,
                     use_resnet=conf.use_resnet, order=conf.order,
                     nl_edge=conf.nl_edge, nl_obj=conf.nl_obj, hidden_dim=conf.hidden_dim,

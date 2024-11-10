@@ -301,7 +301,7 @@ class RelModel(nn.Module):
     """
     RELATIONSHIPS
     """
-    def __init__(self, classes, rel_classes, mode='sgdet', num_gpus=1, use_vision=True, require_overlap_det=True,
+    def __init__(self, classes, rel_classes, data, mode='sgdet', num_gpus=1, use_vision=True, require_overlap_det=True,
                  embed_dim=200, hidden_dim=256, pooling_dim=2048,
                  nl_obj=1, nl_edge=2, use_resnet=False, order='confidence', thresh=0.01,
                  use_proposals=False, pass_in_obj_feats_to_decoder=True,
@@ -391,7 +391,7 @@ class RelModel(nn.Module):
         self.rel_compress = nn.Linear(self.pooling_dim, self.num_rels, bias=True)
         self.rel_compress.weight = torch.nn.init.xavier_normal(self.rel_compress.weight, gain=1.0)
         if self.use_bias:
-            self.freq_bias = FrequencyBias()
+            self.freq_bias = FrequencyBias(data)
 
     @property
     def num_classes(self):

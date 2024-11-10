@@ -14,10 +14,10 @@ class FrequencyBias(nn.Module):
     P(predicate | obj1, obj2, img).
     """
 
-    def __init__(self, eps=1e-3):
+    def __init__(self, data, eps=1e-3):
         super(FrequencyBias, self).__init__()
 
-        fg_matrix, bg_matrix = get_counts(must_overlap=True)
+        fg_matrix, bg_matrix = get_counts(train_data= data, must_overlap=True)
         bg_matrix += 1
         fg_matrix[:, :, 0] = bg_matrix
 
