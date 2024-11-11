@@ -14,6 +14,7 @@ class RoIAlignFunction(Function):
 
         self.feature_size = None
 
+    @staticmethod
     def forward(ctx, features, rois, spatial_scale, aligned_height, aligned_width):
         
         rois_normalized = rois.clone()
@@ -47,6 +48,7 @@ class RoIAlignFunction(Function):
         ctx.save_for_backward(rois, feature_size, aligned_height, aligned_width, spatial_scale)
         return output
 
+    @staticmethod
     def backward(ctx, grad_output):
         # assert(self.feature_size is not None and grad_output.is_cuda)
 
