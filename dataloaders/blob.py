@@ -125,8 +125,13 @@ class Blob(object):
             raise ValueError("Wrong batch size? imgs len {} bsize/gpu {} numgpus {}".format(
                 len(self.imgs), self.batch_size_per_gpu, self.num_gpus
             ))
+        
+        if self.volatile:
+            with torch.no_grad():
+                self.imgs = Variable(torch.stack(self.imgs, 0))
+        else:
+            self.imgs = Variable(torch.stack(self.imgs, 0))
 
-        self.imgs = Variable(torch.stack(self.imgs, 0), volatile=self.volatile)
         self.im_sizes = np.stack(self.im_sizes).reshape(
             (self.num_gpus, self.batch_size_per_gpu, 3))
 

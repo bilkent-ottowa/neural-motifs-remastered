@@ -18,7 +18,7 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision.transforms import Resize, Compose, ToTensor, Normalize
-# from dataloaders.blob import Blob
+from dataloaders.blob import Blob
 
 from config import VG_IMAGES, IM_DATA_FN, VG_SGG_FN, VG_SGG_DICT_FN, BOX_SCALE, IM_SCALE, PROPOSAL_FN
 from dataloaders.image_transforms import SquarePad, Grayscale, Brightness, Sharpness, Contrast, \
@@ -133,7 +133,7 @@ class CarlaBEV(Dataset):
             'img_size': im_size,
             'gt_boxes': gt_boxes,
             'gt_classes': gt_classes,
-            'gt_relations': None,
+            'gt_relations': torch.zeros(1, 3),  # DUMMY
             'scale': IM_SCALE / BOX_SCALE,  # Multiply the boxes by this.
             'index': index,
             'flipped': False,
@@ -171,3 +171,12 @@ def assertion_checks(entry):
 
     assert (entry['gt_boxes'][:, 2] >= entry['gt_boxes'][:, 0]).all()
     assert (entry['gt_boxes'] >= -1).all()
+
+def vg_collate(data, num_gpus=3, is_train=False, mode='det'):
+    assert mode in ('det', 'rel')
+    blob = Blob(mode=mode, is_train=is_train, num_gpus=num_gpus,
+                batch_size_per_gpu=len(data) // num_gpus)
+    for d in data:
+        blob.append(d)
+    blob.reduce()
+    return blob

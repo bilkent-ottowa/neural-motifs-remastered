@@ -10,6 +10,7 @@ from config import BOX_SCALE, IM_SCALE, CARLA_IMAGES, CARLA_DATA_PATH, VG_SGG_DI
 import dill as pkl
 import os
 from torch.utils.data import DataLoader
+from dataloaders.carla import vg_collate
 
 conf = ModelConfig()
 if conf.model == 'motifnet':
@@ -31,7 +32,9 @@ carlaData = CarlaBEV(mode = 'test',
                      filter_non_overlap = True,
                      use_proposals = False)
 
-carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = True, num_workers = conf.num_workers)
+
+carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = True, num_workers = conf.num_workers,
+                             collate_fn=lambda x: vg_collate(x, 2,False, 'rel'), drop_last = True)
 
 detector = RelModel(classes=carlaData.ind_to_classes, rel_classes=carlaData.ind_to_predicates, data=carlaData,
                     num_gpus=conf.num_gpus, mode=conf.mode, require_overlap_det=True,
