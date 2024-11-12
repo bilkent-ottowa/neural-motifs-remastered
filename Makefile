@@ -1,4 +1,9 @@
-export PATH := /usr/local/cuda-9.1/bin:$(PATH)
+export CUDA_HOME:=/usr/local/cuda-12.1
+export LD_LIBRARY_PATH:=/usr/local/cuda-12.1/lib64:$(LD_LIBRARY_PATH)
+export PATH:=/usr/local/cuda-12.1/bin:$(PATH)
+
+verify_cuda:
+	nvcc --version
 
 all: draw_rectangles box_intersections nms roi_align lstm
 

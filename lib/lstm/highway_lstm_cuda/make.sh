@@ -37,6 +37,6 @@ echo $CUDA_MODEL_TARGETS
 
 cd src
 echo "Compiling kernel"
-/usr/local/cuda/bin/nvcc -c -o highway_lstm_kernel.cu.o highway_lstm_kernel.cu --compiler-options -fPIC $CUDA_MODEL_TARGETS
+/usr/local/cuda-12.1/bin/nvcc -c -o highway_lstm_kernel.cu.o highway_lstm_kernel.cu --compiler-options -fPIC -gencode arch=compute_86,code=sm_86
 cd ../
 python build.py build_ext --inplace

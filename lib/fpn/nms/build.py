@@ -37,8 +37,8 @@ setup(
             define_macros=defines,
             include_dirs=[os.path.join(this_file, 'src'), include_paths()],
             extra_compile_args={
-                'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=0'],
-                'nvcc': ['-std=c++14']
+                'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=1'],
+                'nvcc': ['-std=c++14', '-arch=sm_86']
             }
         )
     ],

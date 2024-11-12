@@ -133,8 +133,10 @@ class ObjectDetector(nn.Module):
         :param rois: [num_rois, 5] array of [img_num, x0, y0, x1, y1].
         :return: [num_rois, #dim] array
         """
+        
         feature_pool = RoIAlignFunction(self.pooling_size, self.pooling_size, spatial_scale=1 / 16).apply(
             self.compress(features) if self.use_resnet else features, rois, 1/16, self.pooling_size, self.pooling_size)
+        print('AAA')
         return self.roi_fmap(feature_pool.view(rois.size(0), -1))
 
     def rpn_boxes(self, fmap, im_sizes, image_offset, gt_boxes=None, gt_classes=None, gt_rels=None,
@@ -290,12 +292,12 @@ class ObjectDetector(nn.Module):
         :return: If train:
         """
         fmap = self.feature_map(x) #will not call nms here if mode == 'gtbox'
-
+        
         # Get boxes from RPN
         rois, obj_labels, bbox_targets, rpn_scores, rpn_box_deltas, rel_labels = \
             self.get_boxes(fmap, im_sizes, image_offset, gt_boxes,
                            gt_classes, gt_rels, train_anchor_inds, proposals=proposals) #will not call nms here if mode == 'gtbox'
-
+        
         # Now classify them
         obj_fmap = self.obj_feature_map(fmap, rois) #will call roi_align here ### NEED TO FIX ROI_ALIGN, ALL OTHER CAN BE REMOVED
         od_obj_dists = self.score_fc(obj_fmap)

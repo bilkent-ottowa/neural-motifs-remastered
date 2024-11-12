@@ -117,7 +117,13 @@ class Blob(object):
         for i in range(self.num_gpus):
             for j in range(self.batch_size_per_gpu):
                 chunk_sizes[i] += datom[i * self.batch_size_per_gpu + j].shape[0]
-        return Variable(tensor(np.concatenate(datom, 0)), volatile=self.volatile), chunk_sizes
+
+        if self.volatile:
+            with torch.no_grad():
+                toReturn = Variable(tensor(np.concatenate(datom, 0)))
+        else:
+            toReturn = Variable(tensor(np.concatenate(datom, 0)))
+        return toReturn, chunk_sizes
 
     def reduce(self):
         """ Merges all the detections into flat lists + numbers of how many are in each"""

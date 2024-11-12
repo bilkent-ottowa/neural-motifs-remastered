@@ -4,7 +4,7 @@ performs ROI aligning
 
 import torch
 from torch.autograd import Function
-from .._ext import roi_align
+import roi_align_cuda as roi_align
 
 class RoIAlignFunction(Function):
     def __init__(self, aligned_height, aligned_width, spatial_scale):
@@ -37,10 +37,12 @@ class RoIAlignFunction(Function):
             aligned_width).zero_()
 
         if features.is_cuda:
+            
             res = roi_align.roi_align_forward_cuda(aligned_height,
                                              aligned_width,
                                              spatial_scale, features,
                                              rois_normalized, output)
+            
             assert res == 1
         else:
             raise ValueError

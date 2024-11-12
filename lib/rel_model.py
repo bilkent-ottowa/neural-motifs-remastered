@@ -470,6 +470,7 @@ class RelModel(nn.Module):
             prob dists, boxes, img inds, maxscores, classes
             
         """
+        
         result = self.detector(x, im_sizes, image_offset, gt_boxes, gt_classes, gt_rels, proposals,
                                train_anchor_inds, return_fmap=True)
         if result.is_none():
@@ -485,6 +486,7 @@ class RelModel(nn.Module):
                                                 image_offset, filter_non_overlap=True,
                                                 num_sample_per_gt=1)
 
+        
         rel_inds = self.get_rel_inds(result.rel_labels, im_inds, boxes)
 
         rois = torch.cat((im_inds[:, None].float(), boxes), 1)
@@ -544,6 +546,7 @@ class RelModel(nn.Module):
             bboxes = result.rm_box_priors
 
         rel_rep = F.softmax(result.rel_dists, dim=1)
+        
         return filter_dets(bboxes, result.obj_scores,
                            result.obj_preds, rel_inds[:, 1:], rel_rep)
 

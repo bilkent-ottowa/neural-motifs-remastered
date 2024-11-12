@@ -35,8 +35,8 @@ setup(
                           '/home/yigityildirim/OpenAI/OpenAI non-IB/.venv/lib/python3.8/site-packages/torch/include',
                           '/home/yigityildirim/OpenAI/OpenAI non-IB/.venv/lib/python3.8/site-packages/torch/include/torch'],
             extra_compile_args={
-                'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=0'],
-                'nvcc': ['-std=c++14']
+                'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=1'],
+                'nvcc': ['-gencode arch=compute_86,code=sm_86']
             }
         )
     ],

@@ -1,7 +1,7 @@
 from setuptools import setup, Distribution
 import os
 import torch
-from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension
+from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension, include_paths
 # Might have to export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
 
 # sources = ['src/roi_align.c']
@@ -20,22 +20,26 @@ if torch.cuda.is_available():
 
 
 print(this_file)
-extra_objects = ['src/cuda/roi_align.cu.o']
+extra_objects = ['src/cuda/roi_align_kernel.cu']
 extra_objects = [os.path.join(this_file, fname) for fname in extra_objects]
-
+print(sources + extra_objects)
 setup(
-    name='_ext.roi_align',
+    name='roi_align_cuda',
     ext_modules=[
         CUDAExtension(
-            name='_ext.roi_align',
-            sources=sources,
-            extra_objects=extra_objects,
+            name='roi_align_cuda',
+            sources=sources + extra_objects,
+            # extra_objects=extra_objects,
             define_macros=defines,
-            include_dirs=[os.path.join(this_file, 'src')],
+            include_dirs=[os.path.join(this_file, 'src'), include_paths(),
+                          '/home/yigityildirim/OpenAI/OpenAI non-IB/.venv/lib/python3.8/site-packages/torch/include',
+                          '/home/yigityildirim/OpenAI/OpenAI non-IB/.venv/lib/python3.8/site-packages/torch/include/torch'],
             extra_compile_args={
-                'cxx': ['-std=c++17', '-D_GLIBCXX_USE_CXX11_ABI=0'],
-                'nvcc': ['-std=c++14']
-            }
+                'cxx': ['-g'],
+                'nvcc': ['-O2'],
+                
+            },
+            extra_link_args=['-Wl,--no-as-needed', '-lcuda']
         )
     ],
     cmdclass={

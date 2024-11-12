@@ -6,6 +6,7 @@ extern "C" {
 #include <math.h>
 #include <float.h>
 #include "roi_align_kernel.h"
+#include "cuda_runtime.h"
 
 #define CUDA_1D_KERNEL_LOOP(i, n)                            \
     for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < n; \
