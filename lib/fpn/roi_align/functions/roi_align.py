@@ -47,15 +47,23 @@ class RoIAlignFunction(Function):
         else:
             raise ValueError
 
-        ctx.save_for_backward(rois, feature_size, aligned_height, aligned_width, spatial_scale)
+        ctx.save_for_backward(rois)
+        ctx.feature_size = feature_size
+        ctx.aligned_height = aligned_height
+        ctx.aligned_width = aligned_width
+        ctx.spatial_scale = spatial_scale
         return output
 
     @staticmethod
     def backward(ctx, grad_output):
         # assert(self.feature_size is not None and grad_output.is_cuda)
 
-        rois, feature_size, aligned_height, aligned_width, spatial_scale = ctx.saved_tensors
+        rois = ctx.saved_tensors[0]
         
+        feature_size = ctx.feature_size
+        aligned_height = ctx.aligned_height
+        aligned_width = ctx.aligned_width
+        spatial_scale = ctx.spatial_scale
 
         rois_normalized = rois.clone()
 
