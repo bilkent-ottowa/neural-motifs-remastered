@@ -298,8 +298,8 @@ class AlternatingHighwayLSTM(torch.nn.Module):
         gates = Variable(inputs.data.new().resize_(self.num_layers,
                                                    sequence_length,
                                                    batch_size, 6 * self.hidden_size))
-
-        lengths_variable = Variable(torch.IntTensor(lengths))
+        
+        lengths_variable = Variable(lengths)
         implementation = _AlternatingHighwayLSTMFunction(self.input_size,
                                                          self.hidden_size,
                                                          num_layers=self.num_layers,

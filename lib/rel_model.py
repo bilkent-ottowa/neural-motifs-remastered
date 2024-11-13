@@ -39,7 +39,7 @@ def _sort_by_score(im_inds, scores):
              Lengths for the TxB packed sequence.
     """
     num_im = im_inds[-1] + 1
-    rois_per_image = scores.new_tensor(num_im)
+    rois_per_image = scores.new_empty(num_im)
     lengths = []
     for i, s, e in enumerate_by_image(im_inds):
         rois_per_image[i] = 2 * (s - e) * num_im + i
@@ -158,6 +158,8 @@ class LinearizedContext(nn.Module):
             scores = centers / (centers.max() + 1)
         else:
             raise ValueError("invalid mode {}".format(self.order))
+        print("scores", scores)
+        print("batch_idx", batch_idx)
         return _sort_by_score(batch_idx, scores)
 
     @property
@@ -211,6 +213,9 @@ class LinearizedContext(nn.Module):
         perm, inv_perm, ls_transposed = self.sort_rois(im_inds.data, confidence, box_priors)
         # Pass object features, sorted by score, into the encoder LSTM
         obj_inp_rep = obj_feats[perm].contiguous()
+        if not torch.is_tensor(ls_transposed):
+            ls_transposed = torch.Tensor(ls_transposed).cpu().long()
+
         input_packed = PackedSequence(obj_inp_rep, ls_transposed)
 
         encoder_rep = self.obj_ctx_rnn(input_packed)[0][0]
