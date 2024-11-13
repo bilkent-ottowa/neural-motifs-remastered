@@ -88,7 +88,6 @@ def union_boxes(fmap, rois, union_inds, pooling_size=14, stride=16):
     ),1)
 
     # (num_rois, d, pooling_size, pooling_size)
-    union_pools = RoIAlignFunction(pooling_size, pooling_size,
-                                   spatial_scale=1/stride)(fmap, union_rois)
+    union_pools = RoIAlignFunction.apply(fmap, union_rois, 1/stride, pooling_size, pooling_size)
     return union_pools
  
