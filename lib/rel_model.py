@@ -188,7 +188,8 @@ class LinearizedContext(nn.Module):
         confidence = F.softmax(obj_dists, dim=1).data.view(-1)[
             obj_preds.data + arange(obj_preds.data) * self.num_classes]
         perm, inv_perm, ls_transposed = self.sort_rois(im_inds.data, confidence, box_priors)
-
+        if not torch.is_tensor(ls_transposed):
+            ls_transposed = torch.Tensor(ls_transposed).cpu().long()
         edge_input_packed = PackedSequence(inp_feats[perm], ls_transposed)
         edge_reps = self.edge_ctx_rnn(edge_input_packed)[0][0]
 

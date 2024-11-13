@@ -7,6 +7,7 @@ from torch.nn import Parameter
 from torch.nn.utils.rnn import PackedSequence, pad_packed_sequence, pack_padded_sequence
 import itertools
 from ._ext import highway_lstm_layer
+from numpy import int32
 
 
 def block_orthogonal(tensor, split_sizes, gain=1.0):
@@ -76,14 +77,31 @@ class _AlternatingHighwayLSTMFunction(Function):
         sequence_length, batch_size, input_size = inputs.size()
         tmp_i = inputs.new_empty(batch_size, 6 * hidden_size)
         tmp_h = inputs.new_empty(batch_size, 5 * hidden_size)
+
+        print("inputs: ", input_size)
+        print("hidden_size: ", hidden_size)
+        print("batch_size: ", batch_size)
+        print("numLayers: ", numLayers)
+        print("sequence_length: ", sequence_length)
+        print("lengths: ", lengths)
+        print("inputs: ", inputs)   
+        print("state_accumulator: ", state_accumulator)
+        print("memory_accumulator: ", memory_accumulator)
+        print("tmp_i: ", tmp_i)
+        print("tmp_h: ", tmp_h)
+        print("weight: ", weight)
+        print("bias: ", bias)
+        print("dropout_mask: ", dropout_mask)
+        print("gates: ", gates)
+        print("isTrain: ", isTrain)
         
-        highway_lstm_layer.highway_lstm_forward_cuda(input_size,  # type: ignore # pylint: disable=no-member
-                                                     hidden_size,
-                                                     batch_size,
-                                                     numLayers,
-                                                     sequence_length,
+        highway_lstm_layer.highway_lstm_forward_cuda(int32(input_size),  # type: ignore # pylint: disable=no-member
+                                                     int32(hidden_size),
+                                                     int32(batch_size),
+                                                     int32(numLayers),
+                                                     int32(sequence_length),
                                                      inputs,
-                                                     lengths,
+                                                     lengths.int(),
                                                      state_accumulator,
                                                      memory_accumulator,
                                                      tmp_i,
