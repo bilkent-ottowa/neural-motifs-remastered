@@ -59,12 +59,6 @@ def block_orthogonal(tensor, split_sizes, gain=1.0):
 
 
 class _AlternatingHighwayLSTMFunction(Function):
-    def __init__(self, input_size: int, hidden_size: int, num_layers: int, train: bool) -> None:
-        super(_AlternatingHighwayLSTMFunction, self).__init__()
-        self.input_size = input_size
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.train = train
 
     @staticmethod
     def forward(ctx,  # pylint: disable=arguments-differ
@@ -81,8 +75,8 @@ class _AlternatingHighwayLSTMFunction(Function):
                 numLayers: int) -> Tuple[torch.Tensor, None]:
         
         sequence_length, batch_size, input_size = inputs.size()
-        tmp_i = inputs.new(batch_size, 6 * hidden_size)
-        tmp_h = inputs.new(batch_size, 5 * hidden_size)
+        tmp_i = inputs.new_empty(batch_size, 6 * hidden_size)
+        tmp_h = inputs.new_empty(batch_size, 5 * hidden_size)
         
         highway_lstm_layer.highway_lstm_forward_cuda(input_size,  # type: ignore # pylint: disable=no-member
                                                      hidden_size,
@@ -123,11 +117,11 @@ class _AlternatingHighwayLSTMFunction(Function):
         sequence_length, batch_size, input_size = inputs.size()
         parameters_need_grad = 1 if ctx.needs_input_grad[1] else 0  # pylint: disable=unsubscriptable-object
 
-        grad_input = inputs.new().resize_as_(inputs).zero_()
-        grad_state_accumulator = inputs.new().resize_as_(state_accumulator).zero_()
-        grad_memory_accumulator = inputs.new().resize_as_(memory_accumulator).zero_()
-        grad_weight = inputs.new()
-        grad_bias = inputs.new()
+        grad_input = inputs.new_empty().resize_as_(inputs).zero_()
+        grad_state_accumulator = inputs.new_empty().resize_as_(state_accumulator).zero_()
+        grad_memory_accumulator = inputs.new_empty().resize_as_(memory_accumulator).zero_()
+        grad_weight = inputs.new_empty()
+        grad_bias = inputs.new_empty()
         grad_dropout = None
         grad_lengths = None
         grad_gates = None
@@ -136,8 +130,8 @@ class _AlternatingHighwayLSTMFunction(Function):
             grad_weight.resize_as_(weight).zero_()
             grad_bias.resize_as_(bias).zero_()
         hidden_size = ctx.hidden_size
-        tmp_i_gates_grad = inputs.new().resize_(batch_size, 6 * hidden_size).zero_()
-        tmp_h_gates_grad = inputs.new().resize_(batch_size, 5 * hidden_size).zero_()
+        tmp_i_gates_grad = inputs.new_empty().resize_(batch_size, 6 * hidden_size).zero_()
+        tmp_h_gates_grad = inputs.new_empty().resize_(batch_size, 5 * hidden_size).zero_()
 
         is_training = ctx.is_training
         num_layers = ctx.num_layers
