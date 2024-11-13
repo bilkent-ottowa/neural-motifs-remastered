@@ -39,7 +39,7 @@ def _sort_by_score(im_inds, scores):
              Lengths for the TxB packed sequence.
     """
     num_im = im_inds[-1] + 1
-    rois_per_image = scores.new(num_im)
+    rois_per_image = scores.new_tensor(num_im)
     lengths = []
     for i, s, e in enumerate_by_image(im_inds):
         rois_per_image[i] = 2 * (s - e) * num_im + i
