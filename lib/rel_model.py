@@ -444,8 +444,7 @@ class RelModel(nn.Module):
         :param rois: [num_rois, 5] array of [img_num, x0, y0, x1, y1].
         :return: [num_rois, #dim] array
         """
-        feature_pool = RoIAlignFunction(self.pooling_size, self.pooling_size, spatial_scale=1 / 16)(
-            features, rois)
+        feature_pool = RoIAlignFunction.apply(features, rois, 1/16, self.pooling_size, self.pooling_size)
         return self.roi_fmap_obj(feature_pool.view(rois.size(0), -1))
 
     def forward(self, x, im_sizes, image_offset,

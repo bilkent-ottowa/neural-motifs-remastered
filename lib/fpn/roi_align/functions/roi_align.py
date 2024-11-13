@@ -7,12 +7,12 @@ from torch.autograd import Function
 import roi_align_cuda as roi_align
 
 class RoIAlignFunction(Function):
-    def __init__(self, aligned_height, aligned_width, spatial_scale):
-        self.aligned_width = int(aligned_width)
-        self.aligned_height = int(aligned_height)
-        self.spatial_scale = float(spatial_scale)
+    # def __init__(self, aligned_height, aligned_width, spatial_scale):
+    #     self.aligned_width = int(aligned_width)
+    #     self.aligned_height = int(aligned_height)
+    #     self.spatial_scale = float(spatial_scale)
 
-        self.feature_size = None
+    #     self.feature_size = None
 
     @staticmethod
     def forward(ctx, features, rois, spatial_scale, aligned_height, aligned_width):
@@ -59,7 +59,7 @@ class RoIAlignFunction(Function):
         # assert(self.feature_size is not None and grad_output.is_cuda)
 
         rois = ctx.saved_tensors[0]
-        
+
         feature_size = ctx.feature_size
         aligned_height = ctx.aligned_height
         aligned_width = ctx.aligned_width
