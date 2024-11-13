@@ -56,10 +56,12 @@ optimistic_restore(detector, ckpt['state_dict'])
 all_pred_entries = []
 
 def val_batch(batch_num, b, thrs=(20, 50, 100)):
+    # print(b[0][3].shape)
     det_res = detector[b]
     if conf.num_gpus == 1:
         det_res = [det_res]
 
+    # print(len(det_res))
     for i, (boxes_i, objs_i, obj_scores_i, rels_i, pred_scores_i) in enumerate(det_res):
 
         assert np.all(objs_i[rels_i[:,0]] > 0) and np.all(objs_i[rels_i[:,1]] > 0)
@@ -73,9 +75,11 @@ def val_batch(batch_num, b, thrs=(20, 50, 100)):
             'rel_scores': pred_scores_i,
         }
         all_pred_entries.append(pred_entry)
+        # print(f"IMG {i} \n {pred_entry}")
 
 detector.eval()
 for val_b, batch in enumerate(tqdm(carlaDataLoader)):
+
     val_batch(conf.num_gpus*val_b, batch)
 
 if conf.cache is not None:

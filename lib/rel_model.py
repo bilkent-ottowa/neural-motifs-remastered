@@ -158,8 +158,8 @@ class LinearizedContext(nn.Module):
             scores = centers / (centers.max() + 1)
         else:
             raise ValueError("invalid mode {}".format(self.order))
-        print("scores", scores)
-        print("batch_idx", batch_idx)
+        # print("scores", scores)
+        # print("batch_idx", batch_idx)
         return _sort_by_score(batch_idx, scores)
 
     @property

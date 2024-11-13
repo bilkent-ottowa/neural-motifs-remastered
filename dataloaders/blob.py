@@ -75,6 +75,7 @@ class Blob(object):
         self.im_sizes.append((h, w, scale))
 
         gt_boxes_ = d['gt_boxes'].astype(np.float32) * d['scale']
+        
         self.gt_boxes.append(gt_boxes_)
 
         self.gt_classes.append(np.column_stack((
@@ -144,7 +145,9 @@ class Blob(object):
         if self.is_rel:
             self.gt_rels, self.gt_rel_chunks = self._chunkize(self.gt_rels)
 
+        print(len(self.gt_boxes))
         self.gt_boxes, self.gt_box_chunks = self._chunkize(self.gt_boxes, tensor=torch.FloatTensor)
+        print(self.gt_boxes.shape)
         self.gt_classes, _ = self._chunkize(self.gt_classes)
         if self.is_train:
             self.train_anchor_labels, self.train_chunks = self._chunkize(self.train_anchor_labels)
@@ -236,6 +239,7 @@ class Blob(object):
             return (
             self.imgs[index], self.im_sizes[index], image_offset,
             self.gt_boxes[index], self.gt_classes[index], rels_i, None, self.train_anchor_inds[index])
+        # print(self.gt_boxes[index].shape)
         return (self.imgs[index], self.im_sizes[index], image_offset,
                 self.gt_boxes[index], self.gt_classes[index], rels_i, None)
 
