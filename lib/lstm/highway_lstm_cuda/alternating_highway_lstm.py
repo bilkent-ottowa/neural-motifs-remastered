@@ -59,7 +59,6 @@ def block_orthogonal(tensor, split_sizes, gain=1.0):
 
 
 class _AlternatingHighwayLSTMFunction(Function):
-
     @staticmethod
     def forward(ctx,  # pylint: disable=arguments-differ
                 inputs: torch.Tensor,
@@ -294,12 +293,10 @@ class AlternatingHighwayLSTM(torch.nn.Module):
                                                    batch_size, 6 * self.hidden_size))
         
         lengths_variable = Variable(lengths)
-        implementation = _AlternatingHighwayLSTMFunction(self.input_size,
-                                                         self.hidden_size,
-                                                         num_layers=self.num_layers,
-                                                         train=self.training)
-        output, _ = implementation(inputs, self.weight, self.bias, state_accumulator,
-                                   memory_accumulator, dropout_weights, lengths_variable, gates)
+
+        output, _ = _AlternatingHighwayLSTMFunction.apply(inputs, self.weight, self.bias, state_accumulator,
+                                   memory_accumulator, dropout_weights, lengths_variable, gates,
+                                   self.hidden_size, self.training, self.num_layers)
 
         output = pack_padded_sequence(output, lengths, batch_first=False)
         return output, None
