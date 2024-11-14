@@ -78,10 +78,7 @@ class Blob(object):
         
         self.gt_boxes.append(gt_boxes_)
 
-        self.gt_classes.append(np.column_stack((
-            i * np.ones(d['gt_classes'].shape[0], dtype=np.int64),
-            d['gt_classes'],
-        )))
+        self.gt_classes.append(d['gt_classes'])
 
         # Add relationship info
         if self.is_rel:
@@ -147,11 +144,13 @@ class Blob(object):
         if self.is_rel:
             self.gt_rels, self.gt_rel_chunks = self._chunkize(self.gt_rels)
 
-        print(self.gt_boxes[0].shape)
+
         self.gt_boxes, self.gt_box_chunks = self._chunkize(self.gt_boxes, tensor=torch.FloatTensor)
-        print(self.gt_boxes.shape)
-        print(self.gt_box_chunks)
+        
+        print(self.gt_classes)
         self.gt_classes, _ = self._chunkize(self.gt_classes)
+        print(self.gt_classes)
+        
         if self.is_train:
             self.train_anchor_labels, self.train_chunks = self._chunkize(self.train_anchor_labels)
             self.train_anchors, _ = self._chunkize(self.train_anchors, tensor=torch.FloatTensor)
