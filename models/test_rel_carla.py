@@ -33,8 +33,11 @@ carlaData = CarlaBEV(mode = 'test',
                      use_proposals = False)
 
 
-carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = True, num_workers = conf.num_workers,
-                             collate_fn=lambda x: vg_collate(x, 2,False, 'rel'), drop_last = True)
+# carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = False, num_workers = conf.num_workers,
+#                              collate_fn=lambda x: vg_collate(x, 2,False, 'rel'), drop_last = True)
+
+carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = False, num_workers = conf.num_workers,
+                             drop_last = True)
 
 detector = RelModel(classes=carlaData.ind_to_classes, rel_classes=carlaData.ind_to_predicates, data=carlaData,
                     num_gpus=conf.num_gpus, mode=conf.mode, require_overlap_det=True,
@@ -55,13 +58,13 @@ ckpt = torch.load(conf.ckpt)
 optimistic_restore(detector, ckpt['state_dict'])
 all_pred_entries = []
 
-def val_batch(batch_num, b, thrs=(20, 50, 100)):
-    # print(b[0][3].shape)
-    det_res = detector[b]
-    if conf.num_gpus == 1:
-        det_res = [det_res]
+def val_batch(batch_num, data, thrs=(20, 50, 100)):
+    ims = data['img']
+    gt_boxes = data['gt_boxes']
+    gt_classes = data['gt_classes']
+    im_sizes = data['img_size']
 
-    # print(len(det_res))
+    det_res = detector(ims, im_sizes, 0, gt_boxes = gt_boxes, gt_classes = gt_classes)
     for i, (boxes_i, objs_i, obj_scores_i, rels_i, pred_scores_i) in enumerate(det_res):
 
         assert np.all(objs_i[rels_i[:,0]] > 0) and np.all(objs_i[rels_i[:,1]] > 0)
@@ -75,7 +78,6 @@ def val_batch(batch_num, b, thrs=(20, 50, 100)):
             'rel_scores': pred_scores_i,
         }
         all_pred_entries.append(pred_entry)
-        # print(f"IMG {i} \n {pred_entry}")
 
 detector.eval()
 for val_b, batch in enumerate(tqdm(carlaDataLoader)):
