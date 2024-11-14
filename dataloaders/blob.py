@@ -147,9 +147,10 @@ class Blob(object):
         if self.is_rel:
             self.gt_rels, self.gt_rel_chunks = self._chunkize(self.gt_rels)
 
-        print(len(self.gt_boxes))
+        print(self.gt_boxes[0].shape)
         self.gt_boxes, self.gt_box_chunks = self._chunkize(self.gt_boxes, tensor=torch.FloatTensor)
         print(self.gt_boxes.shape)
+        print(self.gt_box_chunks)
         self.gt_classes, _ = self._chunkize(self.gt_classes)
         if self.is_train:
             self.train_anchor_labels, self.train_chunks = self._chunkize(self.train_anchor_labels)
