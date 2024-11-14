@@ -32,9 +32,9 @@ carlaDataLoader = DataLoader(carlaData, batch_size = conf.batch_size, shuffle = 
 for val_b, batch in enumerate(tqdm(carlaDataLoader)):
     print(len(batch)) # Should be 6
     im0 = batch[0]
-    print(f'Image 0 shape: {im0.shape}, expected {3}x{IM_SCALE}x{IM_SCALE}') # Should be (batch_size, 3, 592, 592)
-    print(f'Image 0 im sizes: {batch[1]}') # Should be (batch_size, 3)
-    print(f'Image 0 image offsets: {batch[2]}') # Should be (0)
-    print(f'Image 0 gt boxes: {batch[3]}') # Should be (num_gt_boxes, 4)
-    print(f'Image 0 gt classes: {batch[4]}') # Should be (num_gt_boxes, 2)
+    print(f'Image 0 shape: {im0[0].shape}, expected {3}x{IM_SCALE}x{IM_SCALE}') # Should be (batch_size, 3, 592, 592)
+    print(f'Image 0 im sizes: {im0[1]}') # Should be (batch_size, 3)
+    print(f'Image 0 image offsets: {im0[2]}') # Should be (0)
+    print(f'Image 0 gt boxes: {im0[3].shape}') # Should be (num_gt_boxes, 4)
+    print(f'Image 0 gt classes: {im0[4].shape}') # Should be (num_gt_boxes, 2)
     
