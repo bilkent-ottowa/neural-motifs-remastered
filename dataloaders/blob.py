@@ -119,13 +119,15 @@ class Blob(object):
             for j in range(self.batch_size_per_gpu):
                 chunk_sizes[i] += datom[i * self.batch_size_per_gpu + j].shape[0]
 
-        if self.volatile:
-            with torch.no_grad():
-                toReturn = Variable(tensor(np.concatenate(datom, 0)))
-        else:
-            toReturn = Variable(tensor(np.concatenate(datom, 0)))
-        return toReturn, chunk_sizes
-
+        ## TAKEN from bknyaz/sgg
+        t = np.concatenate(datom, 0)
+        if len(t) == 0:
+            return 0, chunk_sizes  # Variable(tensor([]), volatile=self.volatile)
+        return Variable(tensor(t)), chunk_sizes
+        
+    def __len__(self):
+        return len(self.im_sizes)
+    
     def reduce(self):
         """ Merges all the detections into flat lists + numbers of how many are in each"""
         if len(self.imgs) != self.batch_size_per_gpu * self.num_gpus:
