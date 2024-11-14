@@ -98,3 +98,28 @@ ENV/
 
 # mypy
 .mypy_cache/
+cuda-keyring_1.1-1_all.deb
+motifnet_predcls_carla
+checkpoints/vg-faster-rcnn.tar
+checkpoints/vgrel-motifnet-sgcls.tar
+checkpoints/vgrel-motifnet-sgdet.tar
+data/glove.6B.50d.txt
+data/glove.6B.100d.pt
+data/glove.6B.100d.txt
+data/glove.6B.200d
+data/glove.6B.200d.pt
+data/glove.6B.200d.txt
+data/glove.6B.300d.txt
+data/carla_bev/carla_bev.pkl
+data/carla_bev/images/0.0.png
+data/carla_bev/images/1.0.png
+data/carla_bev/images/2.0.png
+data/carla_bev/images/3.0.png
+data/carla_bev/images/4.0.png
+data/carla_bev/images/5.0.png
+data/carla_bev/images/6.0.png
+data/carla_bev/images/7.0.png
+data/carla_bev/images/8.0.png
+data/stanford_filtered/VG-SGG-dicts.json
+backup/test_rel_carla.py
+backup/object_detector.py
