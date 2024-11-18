@@ -1,8 +1,7 @@
 # neural-motifs
 
-### Like this work, or scene understanding in general? You might be interested in checking out my brand new dataset VCR: Visual Commonsense Reasoning, at [visualcommonsense.com](https://visualcommonsense.com)!
 
-This repository contains data and code for the paper [Neural Motifs: Scene Graph Parsing with Global Context (CVPR 2018)](https://arxiv.org/abs/1711.06640v2) For the project page (as well as links to the baseline checkpoints), check out [rowanzellers.com/neuralmotifs](https://rowanzellers.com/neuralmotifs). If the paper significantly inspires you, we request that you cite our work:
+This repository contains data and revised code for the paper [Neural Motifs: Scene Graph Parsing with Global Context (CVPR 2018)](https://arxiv.org/abs/1711.06640v2) For the project page (as well as links to the baseline checkpoints), check out [rowanzellers.com/neuralmotifs](https://rowanzellers.com/neuralmotifs). If the paper significantly inspires you, please cite:
 
 ### Bibtex
 
@@ -14,11 +13,12 @@ This repository contains data and code for the paper [Neural Motifs: Scene Graph
   year={2018}
 }
 ```
+
+The code is revised completely to work with Python 3.8+ and PyTorch 2.3.1. Evaluation codes work as intended in modern GPUs. Currently revising training code.
 # Setup
 
 
-0. Install python3.6 and pytorch 3. I recommend the [Anaconda distribution](https://repo.continuum.io/archive/). To install PyTorch if you haven't already, use
- ```conda install pytorch=0.3.0 torchvision=0.2.0 cuda90 -c pytorch```.
+0. Install python3.8 and pytorch 2.3.1.
  
 1. Update the config file with the dataset paths. Specifically:
     - Visual Genome (the VG_100K folder, image_data.json, VG-SGG.h5, and VG-SGG-dicts.json). See data/stanford_filtered/README.md for the steps I used to download these.
