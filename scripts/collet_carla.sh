@@ -4,5 +4,5 @@
 # export CUDA_VISIBLE_DEVICES=$1
 export PYTHONPATH=/home/yigityildirim/OpenAI/OpenAI\ non-IB/neural-motifs
 
-python models/start_carla_collect.py --asynch False --numBurn 0 --save-dir ./data/carla_bev --save-name carla_bev.pkl \
+python models/start_carla_collect.py --asynch False --numBurn 0 --save-dir ./data/carla_bev_noroad --save-name carla_bev_noroad.pkl \
     --numTicks 10 

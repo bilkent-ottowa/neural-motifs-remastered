@@ -27,8 +27,8 @@ PROPOSAL_FN = stanford_path('proposals.h5')
 
 COCO_PATH = '/home/rowan/datasets/mscoco'
 
-CARLA_IMAGES = '/home/yigityildirim/OpenAI/OpenAI non-IB/neural-motifs/data/carla_bev/images'
-CARLA_DATA_PATH = '/home/yigityildirim/OpenAI/OpenAI non-IB/neural-motifs/data/carla_bev/carla_bev.pkl'
+CARLA_IMAGES = '/home/yigityildirim/OpenAI/OpenAI non-IB/neural-motifs/data/carla_bev_noroad/images'
+CARLA_DATA_PATH = '/home/yigityildirim/OpenAI/OpenAI non-IB/neural-motifs/data/carla_bev_noroad/carla_bev_noroad.pkl'
 # =============================================================================
 # =============================================================================
 

@@ -27,8 +27,8 @@ TAGS = {1: "street", # roads
         15: "truck", # trucks
         16: "bus", # buses
         18: "motorcycle", # motorcycles
-        19: "bike", # bicycles
-        24: "sign"} # RoadLines (not sure)
+        19: "bike"} # bicycles
+        #24: "sign"} # RoadLines (not sure)
                     # The tags are from the CARLA ObjectLabels.h
 
 
