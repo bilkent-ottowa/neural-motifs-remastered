@@ -6,3 +6,5 @@ Follow the folling steps to get the dataset set up.
 2. Download the [VG metadata](http://cvgl.stanford.edu/scene-graph/VG/image_data.json). I recommend extracting it to this directory (e.g. `data/stanford_filtered/image_data.json`), or you can edit the path in `config.py`.
 3. Download the [scene graphs](http://cvgl.stanford.edu/scene-graph/dataset/VG-SGG.h5) and extract them to `data/stanford_filtered/VG-SGG.h5`
 4. Download the [scene graph dataset metadata](http://cvgl.stanford.edu/scene-graph/dataset/VG-SGG-dicts.json) and extract it to `data/stanford_filtered/VG-SGG-dicts.json`
+
+## Only download metadata if you are not going to work on VG data directly.
